@@ -24,7 +24,7 @@ class AudioPlayerManager {
   Stream<DurationState>? durationStateStream;
   String songUrl = '';
 
-  void init() {
+  void prepare({bool isNewSong = false}) {
     durationStateStream =
         Rx.combineLatest2<Duration, PlaybackEvent, DurationState>(
             player.positionStream,
@@ -33,12 +33,14 @@ class AudioPlayerManager {
                 progress: position,
                 buffered: playbackEvent.bufferedPosition,
                 total: playbackEvent.duration));
-    player.setUrl(songUrl);
+    if (isNewSong) {
+      player.setUrl(songUrl);
+    }
   }
 
   void updateSongUrl(String url) {
     songUrl = url;
-    init();
+    prepare();
   }
 
   void dispose() {

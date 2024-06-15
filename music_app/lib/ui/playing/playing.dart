@@ -49,8 +49,12 @@ class _PlayingPageState extends State<PlayingPage>
     _imageAnimationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 12));
     _audioPlayerManager = AudioPlayerManager();
-    _audioPlayerManager.updateSongUrl(_song.source);
-    _audioPlayerManager.init();
+    if (_audioPlayerManager.songUrl.compareTo(_song.source) != 0) {
+      _audioPlayerManager.updateSongUrl(_song.source);
+      _audioPlayerManager.prepare(isNewSong: true);
+    } else {
+      _audioPlayerManager.prepare(isNewSong: false);
+    }
     _selectedSongIndex = widget.songs.indexOf(widget.playingSong);
     _loopMode = LoopMode.off;
   }
